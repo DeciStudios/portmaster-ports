@@ -10,7 +10,7 @@ echo "GAMEDIR is set to: $GAMEDIR"
 
 # Exports
 export DATADIR="$GAMEDIR/assets"
-export DATAFILE="PORTFILE.port"
+export DATAFILE="levelhead.port"
 export TMPDIR="$GAMEDIR/tmp"
 
 prepare_system() {
@@ -20,7 +20,7 @@ prepare_system() {
         echo "Missing Python!"
         return 1
     fi
-    
+
     # Mount the GMToolkit runtime
     TOOLKIT="$HOME/gmtoolkit"
     RUNTIME="$controlfolder/libs/gmtoolkit.squashfs"
@@ -44,14 +44,14 @@ prepare_system() {
         echo "This port requires the Dotnet runtime. Please download it."
         return 1
     fi
-    
+
     # Attempt to get SAVEDIR from gmloader.json using jq
     if command -v jq >/dev/null 2>&1; then
         SAVEDIR=$(jq -r '.save_dir // empty' "$GAMEDIR/gmloader.json" 2>/dev/null)
     else
         SAVEDIR="$GAMEDIR/saves"
     fi
-    
+
     # Exports
     export PYTHON
     export SAVEDIR
@@ -66,7 +66,7 @@ prepare_system() {
 
 prepare_files() {
     mkdir -p "$SAVEDIR"
-    
+
     # Delete excess files
     find "$DATADIR" -type f \( \
         -name "*.gitkeep" -o -name "*.exe" -o -name "*.dll" -o -name "*.hashdb" -o \
@@ -105,7 +105,7 @@ dump_textures() {
     # Purge cache before operations
     rm -rf "$SAVEDIR/textures"
     rm -rf "$TMPDIR/"*
-    
+
     # Begin texture operations
     dotnet "$TOOLKIT/utmt-cli/UndertaleModCli.dll" \
         dump "$DATADIR/data.win" \
@@ -129,7 +129,7 @@ set_flags() {
         load "$DATADIR/data.win" \
         -s "$GAMEDIR/tools/toggleflags.csx" \
         -o "$DATADIR/data2.win"
-        
+
     if [ $? -ne 0 ]; then
         echo "Failed to toggle info flags."
         return 1
@@ -144,7 +144,7 @@ set_flags() {
 compress_audio() {
     # Purge cache before operations
     rm -rf "$TMPDIR/"*
-    
+
     # Test for data.win
     if [ -f "$DATADIR/data.win" ]; then
         mv "$DATADIR/data.win" "$DATADIR/game.droid"

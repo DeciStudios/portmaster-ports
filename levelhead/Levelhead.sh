@@ -31,7 +31,7 @@ $ESUDO chmod +xr "$GAMEDIR/tools/splash"
 export SDL_GAMECONTROLLERCONFIG="$sdl_controllerconfig"
 
 # Check if we need to patch the game
-if [ ! -f patchlog.txt ] || [ -f "$GAMEDIR/assets/data.win" ]; then
+if [ ! -f patchlog.txt ] || [ -f "$GAMEDIR/assets/game.droid" ]; then
     if [ -f "$controlfolder/utils/patcher.txt" ]; then
         export PATCHER_FILE="$GAMEDIR/tools/patchscript"
         export PATCHER_GAME="$(basename "${0%.*}")"
